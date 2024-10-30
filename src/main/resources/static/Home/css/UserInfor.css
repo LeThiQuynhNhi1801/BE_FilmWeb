@@ -1,0 +1,313 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.displayBlock{
+    display: block !important;
+}
+.displayNone{
+    display: none !important;
+}
+.maxheight{
+    max-height: 0px!important;
+}
+html{
+    font-size: .75vw;
+}
+body{
+    /* background-color: #141414; */
+    font-family: Helvetica ,sans-serif;
+    
+}
+#header{
+    height: 68px;
+    background-image: linear-gradient(180deg,rgba(0,0,0,.7) 10%,transparent);
+    justify-content: space-between;
+    display: flex;
+    position: fixed;
+    z-index:10000;
+    top:0;
+    left: 0;
+    right: 0;
+}
+#header.scroll{
+    background-color: #141414;    
+}
+#header .header__nav{
+    display: flex;
+    
+}
+.header__nav .header__nav__logo{
+    
+}
+.header__nav__logo img{
+    height: 110px;
+    margin: -24px -20px 0px -6px;
+
+}
+.header__nav .header__nav__mavbar{
+    display: flex;
+    align-items: center;
+}
+.header__nav__mavbar ul{
+    display: flex;
+    color: white;
+    list-style-type: none;
+}
+.header__nav__mavbar ul li{
+    display: flex;
+    align-items: center;    
+}
+.header__nav__mavbar ul li:first-of-type a{
+    font-weight: 600;  
+}
+.header__nav__mavbar ul li a{
+    
+    text-decoration: none;
+    color: #e5e5e5;
+    margin: 10px;
+    font-size: 14px;
+    font-weight: 100;
+}
+#header .header__userInfor{
+    justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    margin-right: 4%;
+    flex-grow: 1;
+}
+.header__userInfor .header__userInfor__search{
+    
+    
+}
+.header__userInfor__search #userInfor__search{
+    position: relative;    
+
+}
+.header__userInfor__search i:first-of-type {
+    color: white;
+    top:20%;
+    position: absolute;
+    font-size: 2rem;
+    right: 0.8rem;
+    z-index: 1;
+    cursor: pointer;
+    
+    
+}
+
+.header__userInfor__search input[type=text]{
+    
+    background-color: transparent;
+    border: none;
+    color: white;
+    width: 0;
+    /* display: none; */
+    font-size: 16px;    
+    
+    padding: 6px 40px 6px 40px;
+    transition: width  ease-in 0.5s;
+}
+.header__userInfor__search input[type=text]:focus{
+    border: none;
+    width: 300px;
+    background-color: #141414;
+    opacity: 0.8;
+    
+}
+.header__userInfor__search input[type=text]:focus ~i{
+    right: 0.8rem;
+}
+.focus{
+    left: 14px !important;
+}
+.header__userInfor__search i:last-of-type {
+    
+    display: none;
+    color: white;
+    top:20%;
+    position: absolute;
+    opacity: 1;
+    z-index: 2;
+    font-size: 16px;
+    cursor: pointer;
+}
+.header__userInfor__search input[type=text]:focus +i{
+    top:20%;
+    position: absolute;
+    display: flex;
+    
+    right: 14px;
+}
+
+.header__userInfor .header__userInfor__account{
+    display: flex;
+    align-items: center;
+}
+
+.header__userInfor__account .userInfor__account__img{
+    display: flex;
+    margin: 0 10px;
+    
+}
+.userInfor__account__img img{
+    border-radius: 4px;
+}
+.header__userInfor__account .userInfor__account__LogOut{
+
+}
+.userInfor__account__LogOut button{
+    font-size: 14px;
+    background: #e50914;
+    color: #fff;
+    padding-left: 10px;
+    padding-right: 8px;
+    border: none;
+    height: 36px;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 110px;
+    font-weight: 600;
+}
+#header .header__mute{
+    position: fixed;
+    bottom: 10%;
+    right: 10%;
+}
+.header__mute .header_mute__icon{
+    width: 50px;
+    height: 50px;
+    padding: auto;
+    border: 1px solid white;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+
+    background-size: contain;
+}
+.header_mute__icon i{
+    position: absolute;
+    top:15%;
+    left: 10%;
+    font-size: 30px;
+    color: white;
+    font-weight: 100;
+}
+
+#container{
+    background-color: #141414;
+    min-height: 100vh;
+    overflow: hidden;
+    
+}
+#container .container__body{
+    background-color: #141414;
+    margin-top: 70px;
+    padding-top: 30px;
+}
+.container__body .container__body__content{
+    width: 96%;
+    margin: auto;
+   
+     background-color:#191919;
+    
+}
+.container__body__content .body__content__header{
+    padding: 20px;
+    border-bottom: 2px solid #141414;
+    display: flex;
+    justify-content: space-between;
+}
+.body__content__header .content__header__title{
+
+}
+.content__header__title h1{
+    color: white;
+    
+    font-size: 24px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    margin: 0px;
+    line-height: 1.5;
+}
+.body__content__header .content__header__ChangePassword{
+    background-color: #e50914;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-size: 20px;
+}
+.content__header__ChangePassword a{
+    color: white;
+    text-decoration: none;
+}
+.body__content__header .content__header__ChangePassword:hover{
+    opacity: 0.7;
+}
+.container__body__content .body__content__User{
+    padding: 20px;
+}
+.body__content__User .User__infor{
+
+}
+.User__infor .User__infor__UserName{
+
+}
+.User__infor .User__infor__FullName{
+
+}
+.User__infor .User__infor__Password{
+
+}
+.User__infor label{
+    padding: 10px;
+    
+    font-size: 20px;
+    color:#e5e5e5;
+}
+.User__infor .infor__notchange{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #141414;
+    
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    color: white;
+}
+.User__infor input{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: #141414;
+    outline: none;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    color: white;
+}
+.body__content__User .Save__Change{
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+.Save__Change #save__button{
+    color: white;
+    font-size: 16px;
+    background-color: #e50914;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    border-radius: 60px;
+    width: 100px;
+    cursor: pointer;
+}
+
+#footer{
+
+}

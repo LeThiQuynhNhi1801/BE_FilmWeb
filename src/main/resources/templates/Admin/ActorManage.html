@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/Admin/css/ActorManage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  
+</head>
+<body>
+    <div id="header">
+        <div class="header__nav">
+            <div class="header__nav__logo">
+                <img src="/Images/netflix.png" alt="">
+            </div>
+            <div class="header__nav__mavbar">
+                <ul>
+                    
+                    <li>
+                        <a href="/Admin/Home">Home</a>
+                    </li>
+                    <li>
+                       <a href="/Admin/User">User</a>                   
+                    </li>
+                    <li>
+                        <a href="/Admin/Category">Category</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Film">Movies</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Actor">Actor</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="header__filmInfor">
+
+            <div class="header__filmInfor__search">
+                <div id="filmInfor__search">
+                    <i class="fa-solid fa-magnifying-glass" onclick="searchApear()"></i><input type="text" placeholder="Tiltles, Characters, Genres" ><i class="fa-solid fa-xmark SEARCH"></i>
+                </div>
+            </div>
+            <div class="header__filmInfor__account">
+                <div class="filmInfor__account__img">
+                    <img src="http://occ-0-325-395.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ4A0D_KyHSDA95zx1UA0MK2HgY3_JC2ImiXV48pqZlpA1yUq8ePZdjlQF0_RdJEgT_B-z6bjjsR9jW82wgeXtIW8vM1pb8.png?r=b36" alt="">
+                </div>
+                <div class="filmInfor__account__LogOut">
+                    <button onclick="LogOut()">Exit Kids</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="container">
+        <div class="container__body">
+            <div class="container__body__content">
+                <div class="body__content__header">
+                    <div class="content__header__title">
+                        <h1>Actor</h1>
+                    </div>
+                    <div class="content__header__AddActor">
+                        <div class="Addfilm">
+                           <a href="/Admin/AddActor"> <p>Add Actor</p> </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="body__content__listActor">
+                    <div class="listActor__header">
+                        <div class="listActor__header__nav">
+                            <div class="listActor__header__nav__Show">
+                                <p>ActorList</p>
+                            </div>
+                            <div class="listActor__header__nav__Search">
+                                <div class="nav__search__Actor">
+                                    
+                                        <label for="search__Actor" >Search</label>
+                                        <input type="text" placeholder="Actor" id="search__Actor" onchange="searchActor()">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="listActor__body">
+                        <table id="table__Actors">
+                           
+                            
+                        </table>
+                    </div>
+                    <div class="listActor__footer">
+                        <div class="listActor__footer__CountShow">
+                            <p>Showing entries</p>
+                        </div>
+                        <div class="listActor__footer__indexPage" id="indexPage">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        
+    </div>
+    <script> 
+         function CheckAdmin(){
+             const xhttp = new XMLHttpRequest();
+                xhttp.onload = function()
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        if(Response.authorities[0].authority!="ROLE_ADMIN"){
+                         localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                        }
+                    }else if(xhttp.status==204){
+
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }
+
+                xhttp.open("GET", "/user",false);
+
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+
+        }
+
+
+        if(localStorage.getItem("Token")){
+            CheckAdmin();
+            GetAllActor();
+            
+        }
+        else{
+            window.location="/Admin/Login";
+        }
+        function LogOut(){
+            window.location="/Admin/Login";
+            localStorage.removeItem("Token");
+        }
+        function searchActor()
+        {
+            var Actorname =document.getElementById('search__Actor').value;
+            if(Actorname=='')
+            {
+                GetAllActor();
+            }else{
+                
+
+                const xhttp = new XMLHttpRequest();
+                xhttp.onload = function() 
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        var tableActorElement = document.getElementById('table__Actors');
+                        var indexPageElement = document.getElementById('indexPage');
+                        var indexPageHtml='';
+
+                        indexPageHtml +='<div class="indexPage___now"><p>'+1+'</p></div>';
+
+                        
+                        var tableActorHtml ='<thead><tr><th>Actor Name</th><th>Actor Age</th><th>Sex</th><th>Action</th></tr></thead><tbody>';
+                        for (var i =0;i<Response.length;i++){
+                            tableActorHtml+='<tr><td>'+Response[i].actorName+'</td><td>'+Response[i].age+'</td><td><p>'+Response[i].sex+'</p></td><td><div class="action__Actor"><div class="action__Actor__Edit" ><i class="fa-solid fa-pen-to-square" onclick="editActor('+Response[i].id+')"></i> </div><div class="action__Actor__Delete"><i class="fa-solid fa-trash"onclick="Delete('+Response[i].id+')" ></i></div></div></td></tr>'
+                        }
+                        tableActorHtml+='</body>';
+                        indexPageElement.innerHTML=indexPageHtml;
+                        tableActorElement.innerHTML=tableActorHtml;
+                    }else if(xhttp.status==204){
+                       
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }         
+                //khai báo phương thức và đường dẫn để request
+                xhttp.open("GET", "/ApiV1/ActorByName/"+Actorname,false);
+                //định dạng gửi đi787
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+            }
+        }
+        
+        function GetAllActor(){
+            
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    var ResponseJson=xhttp.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    console.log(Response);
+                    var tableActorElement = document.getElementById('table__Actors');
+                    var indexPageElement = document.getElementById('indexPage');
+                    var indexPageHtml='';
+
+                    indexPageHtml +='<div class="indexPage___now"><p>'+1+'</p></div>';
+
+                    
+                    var tableActorHtml ='<thead><tr><th>Actor Name</th><th>Actor Age</th><th>Sex</th><th>Action</th></tr></thead><tbody>';
+                    for (var i =0;i<Response.length;i++){
+                        tableActorHtml+='<tr><td>'+Response[i].actorName+'</td><td>'+Response[i].age+'</td><td><p>'+Response[i].sex+'</p></td><td><div class="action__Actor"><div class="action__Actor__Edit" ><i class="fa-solid fa-pen-to-square" onclick="editActor('+Response[i].id+')"></i> </div><div class="action__Actor__Delete"><i class="fa-solid fa-trash"onclick="Delete('+Response[i].id+')" ></i></div></div></td></tr>'
+                    }
+                    tableActorHtml+='</body>';
+                    indexPageElement.innerHTML=indexPageHtml;
+                    tableActorElement.innerHTML=tableActorHtml;
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("GET", "/ApiV1/AllActor",false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }  
+        function prevPage(){
+            indexPage-=1;
+            GetAllActor();
+        }
+        function nextPage(){
+            indexPage+=1;
+            GetAllActor();
+        }
+        function Delete(ActorID){
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    
+                }else if(xhttp.status==204){
+                   GetAllActor();
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("DELETE", "/ApiV1/ActorByID/"+ActorID,false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }
+        function editActor(ActorID){
+            window.location="/Admin/EditActor/"+ActorID;
+        }
+        //cuộn màn hình
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            header.classList.add('scroll');
+        } else {
+            header.classList.remove('scroll');
+        }
+        });
+        
+        //thanh srearch
+        var search=document.querySelector(".header__filmInfor__search input");
+        search.addEventListener("focus",function(){
+            document.querySelector(".header__filmInfor__search i:first-of-type ").classList.add("focus");
+        });
+        search.addEventListener("blur",function(){
+            document.querySelector(".header__filmInfor__search i:first-of-type ").classList.remove("focus");
+        });
+        function searchApear(){
+            document.querySelector(".header__filmInfor__search input").focus();
+    }
+    
+
+
+    </script>
+</body>
+
+</html>

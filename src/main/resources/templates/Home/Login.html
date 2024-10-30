@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/Home/css/login.css">
+  <title>Netflix - Watch TV Shows Online, Watch Movies Online</title>
+</head>
+<body>
+<div id="header">
+  <div class="header__img">
+    <img src="https://assets.nflxext.com/ffe/siteui/vlv3/61e79073-50cf-4f7b-9a23-73290e6f7dca/5083433d-7046-471a-891a-44a1fb41fe6e/VN-vi-20230410-popsignuptwoweeks-perspective_alpha_website_small.jpg" alt="">
+  </div>
+</div>
+<div class="showcase">
+
+  <div class="logo">
+    <img src="/Images/netflix.png">
+  </div>
+
+  <div class="showcase-content">
+    <div class="formm">
+      <div>
+        <h1>Sign In</h1>
+        <div id="Login__Eror">
+
+        </div>
+        <div class="info">
+          <div class="info__Input">
+            <label for="Username" >Email </label>
+            <input class="email" onkeyup="loginByEnter()" id="Username" type="text" >
+            <div class="username__Error Error">
+              <p>Vui lòng nhập email hợp lệ.</p>
+            </div>
+          </div>
+          <div class="info__Input">
+            <label for="password" >Mật khẩu</label>
+            <input id="password" onkeyup="loginByEnter()" class="email" type="password" >
+            <div class="password__Error Error">
+              <p>Mật khẩu của bạn phải chứa từ 4 đến 60 ký tự.</p>
+            </div>
+          </div>
+        </div>
+        <div class="btn">
+          <button class="btn-primary" type="submit" onclick="login()">Sign In</button>
+        </div>
+        <div class="help">
+          <div>
+            <input value="true" type="checkbox"><label>Remember me</label>
+          </div>
+
+          <a href="https://www.netflix.com/dz-en/LoginHelp">Need Help ?</a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="fcbk">
+      <a href="https://facebook.com">
+        <img src="https://i.ibb.co/LrVMXNR/social-fb.png" alt="Facebook">
+      </a>
+      <p>Login with Facebook</p>
+    </div>
+    <div class="signup">
+      <p>New to Netflix ?</p>
+      <a href="/Signup">Sign up now</a>
+    </div>
+    <div class="more">
+      <p>
+        This page is protected by Google reCAPTCHA to ensure you're not a bot. <a href="#">Learn more.</a>
+      </p>
+    </div>
+
+
+  </div>
+
+
+
+
+</div>
+
+
+</body>
+<script src="/Home/js/Login.js"></script>
+</html>
+
+

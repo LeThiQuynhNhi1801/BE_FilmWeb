@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/Admin/css/UserManage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  
+</head>
+<body>
+    <div id="header">
+        <div class="header__nav">
+            <div class="header__nav__logo">
+                <img src="/Images/netflix.png" alt="">
+            </div>
+            <div class="header__nav__mavbar">
+                <ul>
+                    
+                    <li>
+                        <a href="/Admin/Home">Home</a>
+                    </li>
+                    <li>
+                       <a href="/Admin/User">User</a>                   
+                    </li>
+                    <li>
+                        <a href="/Admin/Category">Category</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Film">Movies</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Actor">Actor</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="header__userInfor">
+
+            <div class="header__userInfor__search">
+                <div id="userInfor__search">
+                    <i class="fa-solid fa-magnifying-glass" onclick="searchApear()"></i><input type="text" placeholder="Tiltles, Characters, Genres" ><i class="fa-solid fa-xmark SEARCH"></i>
+                </div>
+            </div>
+            <div class="header__userInfor__account">
+                <div class="userInfor__account__img">
+                    <img src="http://occ-0-325-395.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ4A0D_KyHSDA95zx1UA0MK2HgY3_JC2ImiXV48pqZlpA1yUq8ePZdjlQF0_RdJEgT_B-z6bjjsR9jW82wgeXtIW8vM1pb8.png?r=b36" alt="">
+                </div>
+                <div class="userInfor__account__LogOut">
+                    <button onclick="LogOut()">Exit Kids</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="container">
+        <div class="container__body">
+            <div class="container__body__content">
+                <div class="body__content__header">
+                    <div class="content__header__title">
+                        <h1>User</h1>
+                    </div>
+                    <div class="content__header__AddUser">
+                       
+                    </div>
+                </div>
+                <div class="body__content__listUser">
+                    <div class="listUser__header">
+                        <div class="listUser__header__nav">
+                            <div class="listUser__header__nav__Show">
+                                <p>UserList</p>
+                            </div>
+                            <div class="listUser__header__nav__Search">
+                                <div class="nav__search__User">
+                                    
+                                        <label for="search__User" >Search</label>
+                                        <input type="text" placeholder="User" id="search__User" onchange="searchUser()">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="listUser__body">
+                        <table id="table__Users">
+                           
+                            
+                        </table>
+                    </div>
+                    <div class="listUser__footer">
+                        <div class="listUser__footer__CountShow">
+                            <p>Showing entries</p>
+                        </div>
+                        <div class="listUser__footer__indexPage" id="indexPage">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        
+    </div>
+    <script>
+
+        if(localStorage.getItem("Token")){
+            CheckAdmin();
+            GetAllUser();
+          
+            
+        }
+        else{
+            window.location="/Admin/Login";
+        }
+        function CheckAdmin(){
+             const xhttp = new XMLHttpRequest();
+                xhttp.onload = function()
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        if(Response.authorities[0].authority!="ROLE_ADMIN"){
+                         localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                        }
+                    }else if(xhttp.status==204){
+
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }
+
+                xhttp.open("GET", "/user",false);
+
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+
+        }
+        function LogOut(){
+            window.location="/Admin/Login";
+            localStorage.removeItem("Token");
+        }
+        function searchUser()
+        {
+            var Username =document.getElementById('search__User').value;
+            if(Username=='')
+            {
+                GetAllUser();
+            }else{
+
+                const xhttp = new XMLHttpRequest();
+                xhttp.onload = function() 
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        var tableUserElement = document.getElementById('table__Users');
+                        var indexPageElement = document.getElementById('indexPage');
+                        var indexPageHtml='';
+
+                        indexPageHtml +='<div class="indexPage___now"><p>'+'1'+'</p></div>';
+
+                        
+                        var tableUserHtml ='<thead><tr><th>ID</th><th>UserName</th><th>FullName</th><th>Action</th></tr></thead><tbody>';
+                        for (var i =0;i<Response.length;i++){
+                            tableUserHtml+='<tr><td>'+Response[i].id+'</td><td>'+Response[i].username+'</td><td>'+Response[i].fullname+'</td><td><div class="action__User"><div class="action__User__Edit"><i class="fa-solid fa-pen-to-square" onclick="editUser('+Response[i].id+')"></i></div><div class="action__User__Delete"><i class="fa-solid fa-trash"onclick="Delete('+Response[i].id+')" ></i></div></div></td></tr>'
+                        }
+                        tableUserHtml+='</body>';
+                        indexPageElement.innerHTML=indexPageHtml;
+                        tableUserElement.innerHTML=tableUserHtml;
+                    }else if(xhttp.status==204){
+                       
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }         
+                //khai báo phương thức và đường dẫn để request
+                xhttp.open("GET", "/ApiV1/UserByName/"+Username,false);
+                //định dạng gửi đi787
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+            }
+        }
+        function GetAllUser(){
+            
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    var ResponseJson=xhttp.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    var tableUserElement = document.getElementById('table__Users');
+                    var indexPageElement = document.getElementById('indexPage');
+                    var indexPageHtml='';
+
+                    indexPageHtml +='<div class="indexPage___now"><p>'+1+'</p></div>';
+
+                    
+                    var tableUserHtml ='<thead><tr><th>ID</th><th>UserName</th><th>FullName</th><th>Action</th></tr></thead><tbody>';
+                    for (var i =0;i<Response.length;i++){
+                        tableUserHtml+='<tr><td>'+Response[i].id+'</td><td>'+Response[i].username+'</td><td>'+Response[i].fullname+'</td><td><div class="action__User"><div class="action__User__Edit" ><i class="fa-solid fa-pen-to-square" onclick="editUser('+Response[i].id+')"></i> </div><div class="action__User__Delete"><i class="fa-solid fa-trash"onclick="Delete('+Response[i].id+')" ></i></div></div></td></tr>'
+                    }
+                    tableUserHtml+='</body>';
+                    indexPageElement.innerHTML=indexPageHtml;
+                    tableUserElement.innerHTML=tableUserHtml;
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("GET", "/ApiV1/AllUser",false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }  
+
+        function Delete(userID){
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    
+                }else if(xhttp.status==204){
+                   GetAllUser();
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("DELETE", "/ApiV1/UserByIDForAdmin/"+userID,false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }
+        function editUser(userID){
+            window.location="/Admin/EditUser/"+userID;
+        }
+        //cuộn màn hình
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            header.classList.add('scroll');
+        } else {
+            header.classList.remove('scroll');
+        }
+        });
+        
+        //thanh srearch
+        var search=document.querySelector(".header__userInfor__search input");
+        search.addEventListener("focus",function(){
+            document.querySelector(".header__userInfor__search i:first-of-type ").classList.add("focus");
+        });
+        search.addEventListener("blur",function(){
+            document.querySelector(".header__userInfor__search i:first-of-type ").classList.remove("focus");
+        });
+        function searchApear(){
+            document.querySelector(".header__userInfor__search input").focus();
+    }
+    
+
+
+    </script>
+</body>
+
+</html>

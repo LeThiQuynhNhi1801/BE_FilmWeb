@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/Admin/css/EditChapterFilm.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+</head>
+<body>
+    <div id="header">
+        <div class="header__nav">
+            <div class="header__nav__logo">
+                <img src="/Images/netflix.png" alt="">
+            </div>
+            <div class="header__nav__mavbar">
+                <ul>
+                   
+                    <li>
+                        <a href="/Admin/Home">Home</a>
+                    </li>
+                    <li>
+                       <a href="/Admin/User">User</a>                   
+                    </li>
+                    <li>
+                        <a href="/Admin/Category">Category</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Film">Movies</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Actor">Actor</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="header__userInfor">
+
+            <div class="header__userInfor__search">
+                <div id="userInfor__search">
+                    <i class="fa-solid fa-magnifying-glass" onclick="searchApear()"></i><input type="text" placeholder="Tiltles, Characters, Genres" ><i class="fa-solid fa-xmark SEARCH"></i>
+                </div>
+            </div>
+            <div class="header__userInfor__account">
+                <div class="userInfor__account__img">
+                    <img src="http://occ-0-325-395.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ4A0D_KyHSDA95zx1UA0MK2HgY3_JC2ImiXV48pqZlpA1yUq8ePZdjlQF0_RdJEgT_B-z6bjjsR9jW82wgeXtIW8vM1pb8.png?r=b36" alt="">
+                </div>
+                <div class="userInfor__account__LogOut">
+                    <button onclick="LogOut()">Exit Kids</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="container">
+        <div class="container__body">
+            <div class="container__body__content">
+                <div class="body__content__header">
+                    <div class="content__header__title">
+                        <h1>Chapter</h1>
+                    </div>
+                </div>
+                <div class="body__content__Chapter">
+                    <div class="Chapter__infor">
+                        <div class="Chapter__infor__content" id="ChapterInfor">
+                        
+                        </div>
+                     
+                       
+                    </div>
+                    <div class="Save__Change">
+                        <div id="save__button" onclick="saveChapter()">
+                            Save
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+           
+        </div>
+    </div>
+    <div id="footer">
+        
+    </div>
+    <script>
+     function CheckAdmin(){
+             const xhttp = new XMLHttpRequest();
+                xhttp.onload = function()
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        if(Response.authorities[0].authority!="ROLE_ADMIN"){
+                         localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                        }
+                    }else if(xhttp.status==204){
+
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }
+
+                xhttp.open("GET", "/user",false);
+
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+
+        }
+
+        actorListNow=[];
+        if(localStorage.getItem("Token")){
+            CheckAdmin();
+            GetChapterByID();
+            GetAllActor();
+        }
+        else{
+            window.location="/Admin/Login";
+        }
+        function LogOut(){
+            window.location="/Admin/Login";
+            localStorage.removeItem("Token");
+        }
+        function saveChapter(){
+            var xhr = new XMLHttpRequest();
+            var formData = new FormData();
+            var ListActor=[];
+            var actorListParent = document.querySelectorAll('.Actor__select');
+            actorListParent.forEach(function(actorParent,index){
+                ListActor.push(actorParent.getAttribute("value"));
+            })
+            formData.append('listActor',ListActor);
+            formData.append('chapterName',document.getElementById('ChapterName').value);
+            formData.append('chapterDescription',document.getElementById('ChapterDescription').value);
+            if(document.getElementById('ChapterImage').files[0]!=null){
+                formData.append('chapterImage', document.getElementById('ChapterImage').files[0]);
+            }
+            if(document.getElementById('TrainnerChapter').files[0]!=null){
+                formData.append('trailerChapter', document.getElementById('TrainnerChapter').files[0]);
+            }
+            if(document.getElementById('Video').files[0]!=null){
+                   formData.append('video', document.getElementById('Video').files[0]);
+            }
+
+            xhr.progress= function(event) {
+               
+                  // Tính toán phần trăm load
+                  var percentComplete = (event.loaded / event.total) * 100;
+                  // Hiển thị phần trăm load cho người dùng
+                  console.log( "Loading " + percentComplete.toFixed(0) + "%");
+                
+              };
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var ResponseJson=xhr.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    window.location='/Admin/EditFilm/'+Response.film.id;
+                    
+                } else if(xhr.status === 304){
+                    window.location='/Login';
+                } else if(xhr.status === 400){
+                    var ResponseJson=xhr.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    alert(Response.massage);
+
+                } else{
+                    
+                }
+            };
+            
+            xhr.open('PATCH', "/ApiV1/ChapterByID/"+window.location.pathname.substring(19), true);
+            var jwtToken = localStorage.getItem("Token");
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwtToken);
+           
+            xhr.send(formData);
+        }
+        function GetAllActor(){
+            
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    var ResponseJson=xhttp.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    var selectActorElement =document.getElementById('Actor');
+                    var selectActorHtml='<option value="0"></option>';
+                    for(var i=0;i<Response.length;i++)
+                    {
+                        if(actorListNow.includes(Response[i].id)){}
+                        else{
+                            selectActorHtml+='<option value="'+Response[i].id+'">'+Response[i].actorName+'</option>'
+                        }
+                    }
+                    selectActorElement.innerHTML=selectActorHtml;
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("GET", "/ApiV1/AllActor",false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }  
+        function GetChapterByID(){
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    var ResponseJson=xhttp.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    var chapterElement =document.getElementById('ChapterInfor');
+                    var chapterHTml =' <div class="Chapter__input__Text"><div class="content__Chapter__input"><label for="ChapterName">Chapter Name</label><input type="text"  id="ChapterName" value="'+Response.chapterName+'"></div><div class="content__Chapter__input"><label for="Type">Actor</label><select id="Actor"></select></div><div class="content__Chapter__input"><div class="ActorList" id="ActorList">'
+                    for( var i =0;i<Response.actors.length;i++)
+                    {
+                        chapterHTml+='<div class="Actor__select" value="'+Response.actors[i].id+'">'+Response.actors[i].actorName+'</div>';
+                        actorListNow.push(Response.actors[i].id);
+        
+                    }    
+                    chapterHTml+='</div></div><div class="content__Chapter__input"><label for="Description">Chapter Description</label><textarea name="" id="ChapterDescription" >'+Response.chapterDescription+'</textarea></div></div>   <div class="Chapter__input__file"><div class="input__file"><label for="">ChapterImage</label><div class="Change__inputFile"><img  alt="" src="'+Response.chapterImage+'"><input type="file"  class="input-file" accept="image/*" id="ChapterImage"></div></div><div class="input__file"><label for="">TrailerChapter</label><div class="Change__inputFile"><video id="video-preview" src="'+Response.trailerChapter+'" autoplay></video><input type="file" class="input-file" accept="video/*" id="TrainnerChapter"><div class="pause-playVideo"><i class="fa-solid fa-play fa-beat"></i></div></div></div><div class="input__file"><label for="">Video</label><div class="Change__inputFile"><video id="video-preview" src="'+Response.video+'" autoplay></video><input type="file"  class="input-file" accept="video/*" id="Video"><div class="pause-playVideo" ><i class="fa-solid fa-play fa-beat"></i></div></div></div></div>';
+                    chapterElement.innerHTML=chapterHTml;
+                    
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("GET", "/ApiV1/ChapterByID/"+window.location.pathname.substring(19),false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }
+
+        //duwngf video
+        var pausePlays=document.querySelectorAll('.pause-playVideo');
+        pausePlays.forEach(function(pausePlay, index) {
+            pausePlay.addEventListener("click",()=>{
+                var videonclick=pausePlay.parentNode.querySelector('Video');
+                if(videonclick.paused){
+                    videonclick.play()
+                }else{
+                    videonclick.pause()
+                }
+
+            })
+
+        })
+        //preview file:
+        var inputFiles=document.querySelectorAll('.input-file');
+        
+        inputFiles.forEach(function(inputFile, index) {
+          
+            inputFile.onchange = function(event) {
+            let file = event.target.files[0];
+            let blobURL = URL.createObjectURL(file);
+            inputFile.previousElementSibling.src = blobURL;
+        };
+    });
+ 
+
+    
+            
+        //List Actor
+        var listActorSelect=[];
+        var ActorElement =document.getElementById("Actor");
+        var ActorListElement =document.getElementById('ActorList');
+        var actorSelectFilmsElement = document.querySelectorAll('#Actor option');
+        
+        var actorFilmsElement = document.querySelectorAll('.Actor__select');
+        actorFilmsElement.forEach((actorFilmElement, index) =>{
+            actorFilmElement.addEventListener("click",()=>{
+                ActorElement.insertAdjacentHTML("beforeend", ' <option value="7">'+actorFilmElement.innerHTML+'</option>');
+                actorFilmElement.remove();
+                })
+          });
+   
+          ActorElement.addEventListener("change", function() {
+
+            // Lấy tham chiếu đến phần tử option được chọn
+            var selectedOption = this.options[this.selectedIndex];
+          
+            // Xóa phần tử option được chọn khỏi DOM
+            
+            ActorListElement.insertAdjacentHTML("beforeend", ' <div class="Actor__select" value="'+selectedOption.value+'">'+selectedOption.innerHTML+'</div>');
+            var actorFilmsElementx = document.querySelectorAll('.Actor__select');
+            actorFilmsElementx[actorFilmsElementx.length-1].addEventListener("click",()=>{
+                ActorElement.insertAdjacentHTML("beforeend", ' <option value="'+actorFilmsElementx[actorFilmsElementx.length-1].getAttribute("value")+'">'+actorFilmsElementx[actorFilmsElementx.length-1].innerHTML+'</option>');
+                actorFilmsElementx[actorFilmsElementx.length-1].remove();
+                })
+            selectedOption.remove();
+          });
+        //cuộn màn hình
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            header.classList.add('scroll');
+        } else {
+            header.classList.remove('scroll');
+        }
+        });
+        
+        //thanh srearch
+        var search=document.querySelector(".header__userInfor__search input");
+        search.addEventListener("focus",function(){
+            document.querySelector(".header__userInfor__search i:first-of-type ").classList.add("focus");
+        });
+        search.addEventListener("blur",function(){
+            document.querySelector(".header__userInfor__search i:first-of-type ").classList.remove("focus");
+        });
+        function searchApear(){
+            document.querySelector(".header__userInfor__search input").focus();
+    }
+    
+
+
+    </script>
+</body>
+
+</html>

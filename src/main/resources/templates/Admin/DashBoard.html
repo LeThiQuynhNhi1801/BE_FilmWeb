@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/Admin/css/DashBoard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  
+</head>
+<body>
+    <div id="header">
+        <div class="header__nav">
+            <div class="header__nav__logo">
+                <img src="/Images/netflix.png" alt="">
+            </div>
+            <div class="header__nav__mavbar">
+                <ul>
+                    
+                     
+                    <li>
+                        <a href="/Admin/Home">Home</a>
+                    </li>
+                    <li>
+                       <a href="/Admin/User">User</a>                   
+                    </li>
+                    <li>
+                        <a href="/Admin/Category">Category</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Film">Movies</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Actor">Actor</a>
+                    </li>
+                 
+                </ul>
+            </div>
+        </div>
+        <div class="header__categoryInfor">
+
+            <div class="header__categoryInfor__search">
+                
+            </div>
+            <div class="header__categoryInfor__account">
+                <div class="categoryInfor__account__img">
+                    <img src="http://occ-0-325-395.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ4A0D_KyHSDA95zx1UA0MK2HgY3_JC2ImiXV48pqZlpA1yUq8ePZdjlQF0_RdJEgT_B-z6bjjsR9jW82wgeXtIW8vM1pb8.png?r=b36" alt="">
+                </div>
+                <div class="categoryInfor__account__LogOut">
+                    <button onclick="LogOut()">Exit Kids</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="container">
+        <div class="container__body">
+            <div class="container__body__content">
+                <div class="body__content__header">
+                    <div class="content__header__title">
+                        <label for="fromDay" >From Day</label>
+                        <input type="date" name="fromDay" id="fromDay">
+                    </div>
+                    <div class="content__header__title">             
+                        <label for="toDay" >To Day</label>
+                        <input type="date"  id="toDay" name="toDay">
+                    </div>
+                    
+                </div>
+                <div class="body__content__listChapter">
+                    <div class="listChapter__header">
+                        <div class="listChapter__header__nav">
+                            <div class="listChapter__header__nav__Show">
+                                <p>ChapterHot</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="listChapter__body">
+                        <table id="table__Chapters">
+                 
+                                                
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        
+    </div>
+    <script>
+         function CheckAdmin(){
+             const xhttp = new XMLHttpRequest();
+                xhttp.onload = function()
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        if(Response.authorities[0].authority!="ROLE_ADMIN"){
+                         localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                        }
+                    }else if(xhttp.status==204){
+
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }
+
+                xhttp.open("GET", "/user",false);
+
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+
+        }
+
+        var currentDate = new Date();
+        var toDay=currentDate.getFullYear() + "-" + ((currentDate.getMonth() + 1) < 10 ? "0" : "") + (currentDate.getMonth() + 1) + "-" + (currentDate.getDate() < 10 ? "0" : "") + currentDate.getDate();
+        var pastDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000); // Trừ đi 7 ngày
+        var fromDay =pastDate.getFullYear() + "-" + ((pastDate.getMonth() + 1) < 10 ? "0" : "") + (pastDate.getMonth() + 1) + "-" + (pastDate.getDate() < 10 ? "0" : "") + pastDate.getDate();
+        var toDayInput=document.querySelector('input[name="toDay"]')
+        toDayInput.value=toDay;
+        var fromDayInput=document.querySelector('input[name="fromDay"]')
+        fromDayInput.value=fromDay;
+      
+        if(localStorage.getItem("Token")){
+            CheckAdmin();
+            GetAllChapter();
+
+        }
+        else{
+            window.location="/Admin/Login";
+        }
+        function LogOut(){
+            window.location="/Admin/Login";
+            localStorage.removeItem("Token");
+        }
+        
+       
+        
+        function GetAllChapter(){
+            
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    var ResponseJson=xhttp.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    var tableChapterHtml='  <thead><tr><th>Image</th><th>ChapterName</th><th>View Count</th><th>Rating</th></tr></thead><tbody>'
+                    var tableChapterElement =document.getElementById('table__Chapters');
+                        for (var i=0;i<Response.length;i++)
+                    {
+                        tableChapterHtml+='<tr> <td><div class="imgChapter" ><img src="'+Response[i].chapterImage+'"></div></td> <td>'+Response[i].chapterName+'</td><td>'+Response[i].countView+'</td><td>'+Response[i].rateAvg+'</td></tr>';
+                    }
+                    tableChapterHtml+='<tbody>';
+                    tableChapterElement.innerHTML=tableChapterHtml;
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                   localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("GET", "/ApiV1/ChapterHotFromDaytoDay?fromDay="+fromDay+"&toDay="+toDay,false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }  
+  
+        //cuộn màn hình
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            header.classList.add('scroll');
+        } else {
+            header.classList.remove('scroll');
+        }
+        });
+        
+        fromDayInput.addEventListener('change',()=>{
+           fromDay=fromDayInput.value;
+           GetAllChapter();
+        })
+        toDayInput.addEventListener('change',()=>{
+            toDay=toDayInput.value;
+           GetAllChapter();
+        })
+        
+
+
+    </script>
+</body>
+
+</html>

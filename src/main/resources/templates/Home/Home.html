@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/font/css/tuan.css" />
+    <link rel="stylesheet" href="/Home/css/home.css">
+
+</head>
+<body>
+    <div id="header">
+        <div class="header__nav">
+            <div class="header__nav__logo">
+                <img src="/images/netflix.png" alt="">
+            </div>
+            <div class="header__nav__mavbar">
+                <ul>
+                    <li>
+                        <a href="">Home</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <div class="header__userInfor">
+
+            <div class="header__userInfor__search">
+                <div id="userInfor__search">
+                    <i class="fa-solid fa-magnifying-glass" onclick="searchApear()"></i><input type="text" id="searchFilm" placeholder="Tiltles, Characters, Genres" onkeyup="Search()"><i class="fa-solid fa-xmark SEARCH"></i>
+                </div>
+            </div>
+            <div class="header__userInfor__account">
+                <div class="userInfor__account__img">
+                    <a href="/Home/UserInfor">
+                    <img src="http://occ-0-325-395.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ4A0D_KyHSDA95zx1UA0MK2HgY3_JC2ImiXV48pqZlpA1yUq8ePZdjlQF0_RdJEgT_B-z6bjjsR9jW82wgeXtIW8vM1pb8.png?r=b36" alt="">
+                    </a>
+                </div>
+                <div class="userInfor__account__LogOut">
+                    <button onclick="LogOut()">Exit Kids</button>
+                </div>
+            </div>
+        </div>
+        <div class="header__mute">
+            <div class="header_mute__icon">
+                <i class='icon-volume-off-1'></i>
+            </div>
+        </div>
+    </div>
+    <div id="container">
+        <div class="container__movieHots">
+            <div class="container__movieHots__movie" id="ChapterHot">
+               
+            </div>
+        </div>
+        <div class="container__movieListToiec">
+            <div class="container__movieListToiec__ToiecList">
+                <div class="ToiecList__ToiecVideos" id="listFilmSearch">
+                    <div class="ToiecVideos__ToiecName">
+                        <h1>Gợi ý</h1>
+                    </div>
+                    <div class="ToeicVideos__VideoList" id="RecommendChapter">
+                                                        
+                    </div>
+                </div>
+                <div id="CategoryFilm">
+                    
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+        </div>
+    </div>
+</body>
+<script>
+
+</script>
+
+<script src="/Home/js/Home.js"></script>
+</html>

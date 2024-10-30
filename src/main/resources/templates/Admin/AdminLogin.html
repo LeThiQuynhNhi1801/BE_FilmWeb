@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+<link rel="stylesheet" href="/Admin/css/Adminlogin.css">
+<title>Netflix - Watch TV Shows Online, Watch Movies Online</title>
+</head>
+<body>
+    <div id="header">
+        <div class="header__img">
+            <img src="https://i.ibb.co/vXqDmnh/background.jpg" alt="">
+        </div>
+    </div>
+    <div class="showcase">
+        
+            <div class="logo">
+                <img src="https://i.ibb.co/r5krrdz/logo.png">
+            </div>
+
+            <div class="showcase-content">
+                <div class="formm">
+                    <div>
+                        <h1>Sign In</h1>
+                        <div id="Login__Eror">
+                            
+                        </div>
+                        <div class="info">
+                            <div class="info__Input">
+                                <label for="Username" >Email </label>
+                                <input class="email" onkeyup="loginByEnter()" id="Username" type="text" > 
+                                <div class="username__Error Error">
+                                    <p>Vui lòng nhập email  hợp lệ.</p>
+                                </div>
+                            </div>
+                            <div class="info__Input">
+                                <label for="password" >Mật khẩu</label>
+                                <input id="password" onkeyup="loginByEnter()" class="email" type="password" >
+                                <div class="password__Error Error">
+                                    <p>Mật khẩu của bạn phải chứa từ 4 đến 60 ký tự.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn">
+                            <button class="btn-primary" type="submit" onclick="login()">Sign In</button>
+                        </div>
+                        <div class="help">
+                            <div>
+                                <input value="true" type="checkbox"><label>Remember me</label>
+                            </div>
+
+                            <a href="https://www.netflix.com/dz-en/LoginHelp">Need Help ?</a>
+                        
+                        </div>
+
+                    </div>
+    
+                </div>
+                
+                <div class="fcbk">
+                    <a href="https://facebook.com">
+                        <img src="https://i.ibb.co/LrVMXNR/social-fb.png" alt="Facebook">
+                      </a>
+                    <p>Login with Facebook</p>
+                </div>
+                
+
+
+            </div>
+
+       
+           
+       
+        </div>
+
+
+</body>
+<script>
+
+if(localStorage.getItem("Token")){
+    window.location="/Admin/Home";
+
+}
+else{
+
+}
+    var userNameInput=document.getElementById("Username");
+    var passwordInput=document.getElementById("password");
+
+    var labelUserName = document.querySelector("label[for='" + userNameInput.id + "']");
+    var labelPassword = document.querySelector("label[for='" + passwordInput.id + "']");
+    if(passwordInput.value==''){
+
+        labelUserName.style.fontSize="11px";
+        labelUserName.style.top="7px";
+    }
+    if(userNameInput.value=='')
+    {
+        labelPassword.style.fontSize="11px";
+        labelPassword.style.top="7px";
+    }
+    userNameInput.addEventListener("focus",() => {
+        var userNameError=document.querySelector(".username__Error.Error");
+        var logininforError = document.querySelector('#Login__Eror');
+        userNameError.style.display="none";
+        logininforError.style.display="none";
+        userNameInput.style.borderBottom ="none";
+        labelUserName.style.fontSize="11px";
+        labelUserName.style.top="7px";
+    });
+    userNameInput.addEventListener("blur",() => {
+        var userNameError=document.querySelector(".username__Error.Error");
+        
+        if(userNameInput.value==''){
+            userNameError.innerHTML="Vui lòng nhập username";
+            userNameError.style.display="block";
+            userNameInput.style.borderBottom ="2px solid #e87c03";
+            labelUserName.style.fontSize="16px";
+            labelUserName.style.top="23%";
+            
+        }
+        else{
+           /* userNameError.innerHTML="Vui lòng nhập email hoặc số điện thoại hợp lệ.";
+            userNameError.style.display="block";*/
+        }
+
+    });
+    passwordInput.addEventListener("focus",() => {
+        
+        var passwordError=document.querySelector(".password__Error.Error");
+        var logininforError =document.querySelector('#Login__Eror');
+        passwordError.style.display="none";
+        logininforError.style.display="none";
+        passwordInput.style.borderBottom ="none";
+        labelPassword.style.fontSize="11px";
+        labelPassword.style.top="7px";
+    });
+    passwordInput.addEventListener("blur",() => {
+        
+        var passwordError=document.querySelector(".password__Error.Error");
+        
+        if(passwordInput.value.length<4 ||passwordInput.value==''){
+            passwordError.innerHTML="Mật khẩu của bạn phải chứa từ 4 đến 60 ký tự.";
+            passwordError.style.display="block";
+            passwordInput.style.borderBottom ="2px solid #e87c03";
+            labelPassword.style.fontSize="16px";
+            labelPassword.style.top="23%";
+        }
+        else{
+           /* userNameError.innerHTML="Vui lòng nhập email hoặc số điện thoại hợp lệ.";
+            userNameError.style.display="block";*/
+        }
+
+    });
+    function loginByEnter(){
+        if(event.keyCode==13){
+            login();
+        }
+    }
+    function login()
+    {
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() 
+        {
+           
+            if(xhttp.status==200)
+            {
+                var tokenResponseJson=xhttp.responseText
+                var tokenResponse= JSON.parse(tokenResponseJson)
+                localStorage.setItem("Token", tokenResponse['token']);
+                window.location='/Admin/Home';
+                
+            }
+            else
+            {
+
+                document.querySelector('#Login__Eror').innerHTML='<p>Rất tiếc, chúng tôi không tìm thấy tài khoản nào có địa chỉ email này. Vui lòng thử lại hoặc tạo một tài khoản mới.</p>'
+                document.querySelector('#Login__Eror').style.display='block';
+            }
+        }         
+        const userInfo={
+            username:userNameInput.value,
+            password:passwordInput.value
+        }
+        postData=JSON.stringify(userInfo)
+        xhttp.open("POST", "/auth",false);
+        xhttp.setRequestHeader("Content-type","application/json")
+        xhttp.send(postData)
+    }
+</script>
+</html>
+
+

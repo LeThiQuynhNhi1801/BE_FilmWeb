@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/Admin/css/AddActor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+</head>
+<body>
+    <div id="header">
+        <div class="header__nav">
+            <div class="header__nav__logo">
+                <img src="/Images/netflix.png" alt="">
+            </div>
+            <div class="header__nav__mavbar">
+                <ul>
+                    
+                    <li>
+                        <a href="/Admin/Home">Home</a>
+                    </li>
+                    <li>
+                       <a href="/Admin/User">User</a>                   
+                    </li>
+                    <li>
+                        <a href="/Admin/Category">Category</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Film">Movies</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Actor">Actor</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="header__categoryInfor">
+
+            <div class="header__categoryInfor__search">
+                <div id="categoryInfor__search">
+                    <i class="fa-solid fa-magnifying-glass" onclick="searchApear()"></i><input type="text" placeholder="Tiltles, Characters, Genres" ><i class="fa-solid fa-xmark SEARCH"></i>
+                </div>
+            </div>
+            <div class="header__categoryInfor__account">
+                <div class="categoryInfor__account__img">
+                    <img src="http://occ-0-325-395.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ4A0D_KyHSDA95zx1UA0MK2HgY3_JC2ImiXV48pqZlpA1yUq8ePZdjlQF0_RdJEgT_B-z6bjjsR9jW82wgeXtIW8vM1pb8.png?r=b36" alt="">
+                </div>
+                <div class="categoryInfor__account__LogOut">
+                    <button onclick="LogOut()">Exit Kids</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="container">
+        <div class="container__body">
+            <div class="container__body__content">
+                <div class="body__content__header">
+                    <div class="content__header__title">
+                        <h1>EditActor</h1>
+                    </div>
+                </div>
+                <div class="body__content__Actor">
+                    <div class="Actor__infor" id="categoryEdit__inFor">
+                        <div class="Actor__infor__ActorName">
+                            <label for="ActorName">ActorName</label>
+                            <input type="text" id="ActorName" >
+                        </div>
+                        <div class="Actor__infor__ActorAge">
+                            <label for="Age">Age</label>
+                            <input type="int" id="Age" >
+                        </div>
+                        <div class="Actor__infor__ActorNativeland">
+                            <label for="Nativeland">ActorNativeland</label>
+                            <input type="text" id="Nativeland" >
+                        </div>
+                        <div class="Actor__infor__ActorSex">
+                            <label for="Sex">Sex</label>
+                            <select id="Sex" required>
+                                <option value="1" >Nam</option>
+                                <option value="0" selected>Nữ</option>
+                                
+                            </select>
+                        </div>
+                    </div>
+                    <div class="Save__Change">
+                        <div id="save__button" onclick="Save()">
+                            Save
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        
+    </div>
+    <script>
+     function CheckAdmin(){
+             const xhttp = new XMLHttpRequest();
+                xhttp.onload = function()
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        if(Response.authorities[0].authority!="ROLE_ADMIN"){
+                         localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                        }
+                    }else if(xhttp.status==204){
+
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }
+
+                xhttp.open("GET", "/user",false);
+
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+
+        }
+
+        if(localStorage.getItem("Token")){  
+            CheckAdmin();
+        }
+        else{
+            window.location="/Admin/Login";
+        }
+        function LogOut(){
+            window.location="/Admin/Login";
+            localStorage.removeItem("Token");
+        }
+        function Save(){
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            { var ResponseJson=xhttp.responseText
+                var Response= JSON.parse(ResponseJson)
+                console.log(Response);
+                if(xhttp.status==201)
+                {
+                    window.location='/Admin/Actor';
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }
+
+            const actorPost ={
+                actorName:document.getElementById('ActorName').value,
+                age:document.getElementById('Age').value,
+                nativeLand:document.getElementById('Nativeland').value,
+                sex:document.getElementById('Sex').value
+               
+                
+            }
+            
+            var actorPostJson =JSON.stringify(actorPost);
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("POST", "/ApiV1/AllActor",false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send(actorPostJson);
+        }
+        //cuộn màn hình
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            header.classList.add('scroll');
+        } else {
+            header.classList.remove('scroll');
+        }
+        });
+        
+        //thanh srearch
+        var search=document.querySelector(".header__categoryInfor__search input");
+        search.addEventListener("focus",function(){
+            document.querySelector(".header__categoryInfor__search i:first-of-type ").classList.add("focus");
+        });
+        search.addEventListener("blur",function(){
+            document.querySelector(".header__categoryInfor__search i:first-of-type ").classList.remove("focus");
+        });
+        function searchApear(){
+            document.querySelector(".header__categoryInfor__search input").focus();
+    }
+    
+
+
+    </script>
+</body>
+
+</html>

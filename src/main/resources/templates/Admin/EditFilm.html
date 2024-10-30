@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/Admin/css/EditFilm.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+</head>
+<body>
+    <div id="header">
+        <div class="header__nav">
+            <div class="header__nav__logo">
+                <img src="/Images/netflix.png" alt="">
+            </div>
+            <div class="header__nav__mavbar">
+                <ul>
+                  
+                    <li>
+                        <a href="/Admin/Home">Home</a>
+                    </li>
+                    <li>
+                       <a href="/Admin/User">User</a>                   
+                    </li>
+                    <li>
+                        <a href="/Admin/Category">Category</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Film">Movies</a>
+                    </li>
+                    <li>
+                        <a href="/Admin/Actor">Actor</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="header__userInfor">
+
+            <div class="header__userInfor__search">
+                <div id="userInfor__search">
+                    <i class="fa-solid fa-magnifying-glass" onclick="searchApear()"></i><input type="text" placeholder="Tiltles, Characters, Genres" ><i class="fa-solid fa-xmark SEARCH"></i>
+                </div>
+            </div>
+            <div class="header__userInfor__account">
+                <div class="userInfor__account__img">
+                    <img src="http://occ-0-325-395.1.nflxso.net/dnm/api/v6/K6hjPJd6cR6FpVELC5Pd6ovHRSk/AAAABQ4A0D_KyHSDA95zx1UA0MK2HgY3_JC2ImiXV48pqZlpA1yUq8ePZdjlQF0_RdJEgT_B-z6bjjsR9jW82wgeXtIW8vM1pb8.png?r=b36" alt="">
+                </div>
+                <div class="userInfor__account__LogOut">
+                    <button onclick="LogOut()">Exit Kids</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div id="container">
+        <div class="container__body">
+            <div class="container__body__content">
+                <div class="body__content__header">
+                    <div class="content__header__title">
+                        <h1>Film</h1>
+                    </div>
+                </div>
+                <div class="body__content__Film">
+                    <div class="Film__infor">
+                        <div class="Film__infor__content" id="Film__Content">
+                            <div class="Film__input__Text">
+                                <div class="content__Film__input">
+                                    <label for="FilmName">Film Name</label>
+                                    <input type="text"  id="FilmName">
+                                </div>
+                                <div class="content__Film__input">
+                                    <label for="Type">Type</label>
+                                    <select id="Type">
+                                        <option value="1">Phim Bộ</option>
+                                        <option value="0">Phim lẻ</option>
+                                    </select>
+                                </div>
+                                <div class="content__Film__input">
+                                    <label for="Category">Category</label>
+                                    <select id="Category">
+                                        
+                                      
+                                    </select>
+                                </div>
+                                <div class="content__Film__input">
+                                    <div class="CategoryList" id="CategoryList">
+                                        
+                                    </div>
+                                </div>
+                                <div class="content__Film__input">
+                                    <label for="Actor">Actor</label>
+                                    <select id="Actor">
+                                        
+                                      
+                                    </select>
+                                </div>
+                                <div class="content__Film__input">
+                                    <div class="ActorList" id="ActorList">
+                                        
+                                    </div>
+                                </div>
+                                <div class="content__Film__input">
+                                    <label for="Description">Description</label>
+                                    <textarea name="" id="Description" ></textarea>
+                                </div>
+
+                            </div>
+                            <div class="Film__input__file">
+                                <div class="input__file">
+                                    <label for="">Image</label>
+                                    <div class="Change__inputFile">
+                                        <img  alt="" >
+                                        <input type="file"  class="input-file" accept="image/*" id="Image">
+                                    </div>
+                                </div>
+                                <div class="input__file">
+                                    <label for="">Banner</label>
+                                    <div class="Change__inputFile">
+                                        <img  alt="">
+                                        <input type="file" class="input-file" accept="image/*" id="Banner">
+                                    </div>
+                                </div>
+                                <div class="input__file">
+                                    <label for="">Trainner</label>
+                                    <div class="Change__inputFile">
+                                        <video id="video-preview" src="" autoplay></video>
+                                        
+                                        <input type="file" class="input-file" accept="video/*" id="Trainner">
+                                        <div class="pause-playVideo"><i class="fa-solid fa-play fa-beat"></i></div>
+                                    </div>
+                                </div>
+                                <div class="input__file">
+                                    <label for="">Video</label>
+                                    <div class="Change__inputFile">
+                                        <video id="video-preview" src="" autoplay></video>
+                                        <input type="file"  class="input-file" accept="video/*" id="Video">
+                                        <div class="pause-playVideo" ><i class="fa-solid fa-play fa-beat"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="Chapter__infor">
+                            <div class="content__Chapter__input">
+                                <label for="ChapterName">Chapter Name</label>
+                                <input type="text"  id="ChapterName">
+                            </div>
+                          
+                            <div class="content__Chapter__input">
+                                <label for="ChapterDescription">ChapterDescription</label>
+                                <textarea name="" id="ChapterDescription" ></textarea>
+                            </div>
+                        </div>
+                       <div class="Film__Chapter">
+                            
+                       </div>
+                       
+                    </div>
+                    <div class="Save__Change">
+                        <div id="save__button" onclick="saveproduct()">
+                            Save
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="ChapterByFilm" id="ChapterByFilm">
+                <div class="listChapter__header">
+                    <div class="listChapter__header__nav">
+                        <div class="listChapter__header__nav__Show">
+                            <p>ChapterList</p>
+                        </div>
+                        <div class="content__header__AddChapter">
+                            <div id="AddChapter">
+                               
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="listChapter__body">
+                    <table id="table__Chapters">
+                         
+                          
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        
+    </div>
+    <script>
+     function CheckAdmin(){
+             const xhttp = new XMLHttpRequest();
+                xhttp.onload = function()
+                {
+                    if(xhttp.status==200)
+                    {
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        if(Response.authorities[0].authority!="ROLE_ADMIN"){
+                         localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                        }
+                    }else if(xhttp.status==204){
+
+                    }
+                    else if(xhttp.status==401)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                    else if(xhttp.status==403)
+                    {
+                        localStorage.removeItem("Token");
+                        window.location="/Admin/Login";
+                    }
+                }
+
+                xhttp.open("GET", "/user",false);
+
+                xhttp.setRequestHeader("Content-type","application/json")
+                token = localStorage.getItem("Token");
+                authorization ='Bearer '+token
+                xhttp.setRequestHeader("Authorization",authorization);
+                xhttp.send();
+
+        }
+
+        var CategoryListNow=[];
+        var ActorListNow=[];
+        if(localStorage.getItem("Token")){
+            CheckAdmin();
+            GetFilm();
+            GetAllCategory();
+            GetAllActor();
+        }
+        else{
+            window.location="/Admin/Login";
+        }
+        function LogOut(){
+            window.location="/Admin/Login";
+            localStorage.removeItem("Token");
+        }
+        function saveproduct(){
+            var xhr = new XMLHttpRequest();
+            var formData = new FormData();
+            var ListCategory =[];
+            var ListActor=[];
+            var actorListParent = document.querySelectorAll('.Actor__select');
+            actorListParent.forEach(function(actorParent,index){
+                ListActor.push(actorParent.getAttribute("value"));
+            })
+            var categoryListParent = document.querySelectorAll('.Category__select');
+            categoryListParent.forEach(function(categoryParent,index){
+                ListCategory.push(categoryParent.getAttribute("value"));
+            })
+            
+            formData.append('filmName',document.getElementById('FilmName').value);
+            formData.append('description',document.getElementById('Description').value);
+            formData.append('filmBollen',document.getElementById('Type').value);
+
+            formData.append('listCategory',ListCategory);
+            formData.append('listActor',ListActor);
+            if(document.getElementById('Image').files[0]!=null){
+                formData.append('image', document.getElementById('Image').files[0]);
+            }
+            if(document.getElementById('Banner').files[0]!=null){
+                formData.append('bannerFilmName', document.getElementById('Banner').files[0]);
+            }
+            if(document.getElementById('Trainner').files[0]!=null){
+                formData.append('trailerFilm', document.getElementById('Trainner').files[0]);
+            }
+            if(document.getElementById('Video').files[0]!=null){
+                formData.append('video', document.getElementById('Video').files[0]);
+            }
+            if( document.getElementById('ChapterName').value!="" && document.getElementById('ChapterDescription').value!=""){
+                formData.append('chapterName', document.getElementById('ChapterName').value);
+                formData.append('chapterDescription', document.getElementById('ChapterDescription').value);
+            }
+
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                  window.location='/Admin/EditFilm/'+window.location.pathname.substring(16)
+                } else if(xhr.status === 304){
+                    window.location='/Login';
+                } else if(xhr.status === 400){
+                    var ResponseJson=xhr.responseText;
+                    var Response= JSON.parse(ResponseJson);
+                    alert(Response.massage)
+                } else{
+
+                }
+            };
+            
+            xhr.open('PATCH', '/ApiV1/FilmByID/'+window.location.pathname.substring(16), true);
+            var jwtToken = localStorage.getItem("Token");
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwtToken);
+           
+            xhr.send(formData);
+        }
+        
+       function GetFilm(){
+          
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() 
+        {
+            if(xhttp.status==200)
+            {
+                
+            var ResponseJson=xhttp.responseText;
+            var Response= JSON.parse(ResponseJson);
+            document.getElementById('AddChapter').innerHTML='<a href="/Admin/AddChapterByFilmID/'+Response.id+'"> <p>Add Chapter</p> </a>'
+            var FilmElement =document.getElementById('Film__Content');
+            var FilmHTml='';
+            var tableChapterElement =document.getElementById('table__Chapters');
+            var tableChapterHtml='<thead><tr><th>ChapterNumber</th><th>ChapterName</th><th>Description</th><th>Action</th></tr></thead><tbody>       ';
+            for(var i=0;i<Response.chapters.length;i++){
+                tableChapterHtml+='  <tr><td>'+Response.chapters[i].chapterNumber+'</td><td>'+Response.chapters[i].chapterName+'</td> <td>'+Response.chapters[i].chapterDescription+'</td><td><div class="action__Chapter"><div class="action__Chapter__Edit"><a href="/Admin/EditChapter/'+Response.chapters[i].id+'"><i class="fa-solid fa-pen-to-square"></i><a></div><div class="action__Chapter__Delete" onclick="DeleteChapter('+Response.chapters[i].id+')"><i class="fa-solid fa-trash"></i></div></div></td></tr>'
+            }
+            tableChapterHtml+='</tbody>';
+            tableChapterElement.innerHTML=tableChapterHtml;
+            FilmHTml+='<div class="Film__input__Text"><div class="content__Film__input"><label for="FilmName">Film Name</label><input type="text"  id="FilmName" value="'+Response.filmName+'"></div><div class="content__Film__input"><label for="Type">Type</label><select id="Type">';
+            if(Response.filmBollen)      {
+                FilmHTml+='<option value="1" selected >Phim Bộ</option>';
+                document.getElementById('Chapter__infor').style.display='none';
+            }
+            else{
+                FilmHTml+='<option value="1">Phim Bộ</option><option value="0" selected>Phim lẻ</option>';
+                document.getElementById('Chapter__infor').style.display='none';
+                document.getElementById('ChapterByFilm').style.display='none';
+            }
+            FilmHTml+='</select></div><div class="content__Film__input"><label for="Type">Category</label><select id="Category"></select></div><div class="content__Film__input"><div class="CategoryList" id="CategoryList">';
+            for( var i =0;i<Response.categories.length;i++)
+            {
+                FilmHTml+='<div class="Category__select" value="'+Response.categories[i].id+'">'+Response.categories[i].categoryName+'</div>';
+                CategoryListNow.push(Response.categories[i].id);
+
+            }    
+                
+            FilmHTml+='</select></div><div class="content__Film__input"><label for="Actor">Actor</label><select id="Actor"></select></div><div class="content__Film__input"><div class="ActorList" id="ActorList">';
+                for( var i =0;i<Response.chapters[0].actors.length;i++)
+                {
+                    FilmHTml+='<div class="Actor__select" value="'+Response.chapters[0].actors[i].id+'">'+Response.chapters[0].actors[i].actorName+'</div>';
+                    ActorListNow.push(Response.chapters[0].actors[i].id);
+    
+                }   
+            FilmHTml+='</div></div></div><div class="content__Film__input"><label for="Description">Description</label><textarea name="" id="Description" >'+Response.filmDescription+'</textarea></div></div><div class="Film__input__file"><div class="input__file"><label for="">Image</label><div class="Change__inputFile"><img  alt="" src="'+Response.filmImage+'"><input type="file"  class="input-file" accept="image/*" id="Image"></div></div><div class="input__file"><label for="">Banner</label><div class="Change__inputFile"><img  alt="" src="'+Response.bannerFilmName+'"><input type="file" class="input-file" accept="image/*" id="Banner"></div></div><div class="input__file"><label for="">Trainner</label><div class="Change__inputFile"><video id="video-preview" src="'+Response.trailerFilm+'" autoplay></video><input type="file" class="input-file" accept="video/*" id="Trainner"><div class="pause-playVideo"><i class="fa-solid fa-play fa-beat"></i></div></div></div><div class="input__file"><label for="">Video</label><div class="Change__inputFile"><video id="video-preview" src="'+Response.chapters[0].video+'" autoplay></video><input type="file"  class="input-file" accept="video/*" id="Video"><div class="pause-playVideo" ><i class="fa-solid fa-play fa-beat"></i></div></div></div></div>'
+            FilmElement.innerHTML=FilmHTml;
+            }else if(xhttp.status==204){
+               
+            }
+            else if(xhttp.status==401)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Admin/Login";
+            }
+            else if(xhttp.status==403)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Admin/Login";
+            }
+        }         
+        //khai báo phương thức và đường dẫn để request
+        xhttp.open("GET", "/ApiV1/FilmByID/"+window.location.pathname.substring(16),false);
+        //định dạng gửi đi787
+        xhttp.setRequestHeader("Content-type","application/json")
+        token = localStorage.getItem("Token");
+        authorization ='Bearer '+token
+        xhttp.setRequestHeader("Authorization",authorization);
+        xhttp.send();
+       }
+        
+        function GetAllCategory(){
+            
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    var ResponseJson=xhttp.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    var selectCategoryElement =document.getElementById('Category');
+                    var selectCategoryHtml='<option value="0"></option>';
+                    
+                    for(var i=0;i<Response.length;i++)
+                    {
+                        if(CategoryListNow.includes(Response[i].id)){}
+                        else{
+                        selectCategoryHtml+='<option value="'+Response[i].id+'">'+Response[i].categoryName+'</option>'
+                        }
+                    }
+                    selectCategoryElement.innerHTML=selectCategoryHtml;
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("GET", "/ApiV1/AllCategory",false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }  
+        function GetAllActor(){
+            
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    var ResponseJson=xhttp.responseText
+                    var Response= JSON.parse(ResponseJson)
+                    var selectActorElement =document.getElementById('Actor');
+                    var selectActorHtml='<option value="0"></option>';
+                    for(var i=0;i<Response.length;i++)
+                    {
+                        if(ActorListNow.includes(Response[i].id)){}
+                        else{
+                            selectActorHtml+='<option value="'+Response[i].id+'">'+Response[i].actorName+'</option>'
+                        }
+                    }
+                    selectActorElement.innerHTML=selectActorHtml;
+                }else if(xhttp.status==204){
+                   
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("GET", "/ApiV1/AllActor",false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }  
+        
+        function DeleteChapter(ChapterID){
+            const xhttp = new XMLHttpRequest();
+            xhttp.onload = function() 
+            {
+                if(xhttp.status==200)
+                {
+                    
+                }else if(xhttp.status==204){
+                    GetFilm();
+                }
+                else if(xhttp.status==401)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+                else if(xhttp.status==403)
+                {
+                    localStorage.removeItem("Token");
+                    window.location="/Admin/Login";
+                }
+            }         
+            //khai báo phương thức và đường dẫn để request
+            xhttp.open("DELETE", "/ApiV1/ChapterByID/"+ChapterID,false);
+            //định dạng gửi đi787
+            xhttp.setRequestHeader("Content-type","application/json")
+            token = localStorage.getItem("Token");
+            authorization ='Bearer '+token
+            xhttp.setRequestHeader("Authorization",authorization);
+            xhttp.send();
+        }
+        //duwngf video
+        var pausePlays=document.querySelectorAll('.pause-playVideo');
+        pausePlays.forEach(function(pausePlay, index) {
+            pausePlay.addEventListener("click",()=>{
+                var videonclick=pausePlay.parentNode.querySelector('Video');
+                if(videonclick.paused){
+                    videonclick.play()
+                }else{
+                    videonclick.pause()
+                }
+
+            })
+
+        })
+        //preview file:
+        var inputFiles=document.querySelectorAll('.input-file');
+        
+        inputFiles.forEach(function(inputFile, index) {
+          
+            inputFile.onchange = function(event) {
+            let file = event.target.files[0];
+            let blobURL = URL.createObjectURL(file);
+            inputFile.previousElementSibling.src = blobURL;
+        };
+    });
+ 
+
+    //Type
+    
+    document.getElementById('Type').addEventListener("change", function() {
+
+        // Lấy tham chiếu đến phần tử option được chọn
+        var selectedOption = this.options[this.selectedIndex];
+        if(selectedOption.value=="1"){
+            document.getElementById('Chapter__infor').style.display="block";
+            document.getElementById('ChapterByFilm').style.display="block";
+        }
+        else{
+            document.getElementById('Chapter__infor').style.display="none";
+            document.getElementById('ChapterByFilm').style.display="none";
+        }
+        
+    });
+           
+            
+        //List Category
+        var listCategorySelect=[];
+        var CategoryElement =document.getElementById("Category");
+        var CategoryListElement =document.getElementById('CategoryList');
+        var categorySelectFilmsElement = document.querySelectorAll('#Category option');
+        
+        var categoryFilmsElement = document.querySelectorAll('.Category__select');
+        categoryFilmsElement.forEach((categoryFilmElement, index) =>{
+            categoryFilmElement.addEventListener("click",()=>{
+                CategoryElement.insertAdjacentHTML("beforeend", ' <option value="7">'+categoryFilmElement.innerHTML+'</option>');
+                categoryFilmElement.remove();
+                })
+          });
+   
+          CategoryElement.addEventListener("change", function() {
+
+            // Lấy tham chiếu đến phần tử option được chọn
+            var selectedOption = this.options[this.selectedIndex];
+          
+            // Xóa phần tử option được chọn khỏi DOM
+            
+            CategoryListElement.insertAdjacentHTML("beforeend", ' <div class="Category__select" value="'+selectedOption.value+'">'+selectedOption.innerHTML+'</div>');
+            var categoryFilmsElementx = document.querySelectorAll('.Category__select');
+            categoryFilmsElementx[categoryFilmsElementx.length-1].addEventListener("click",()=>{
+                CategoryElement.insertAdjacentHTML("beforeend", ' <option value="'+categoryFilmsElementx[categoryFilmsElementx.length-1].getAttribute("value")+'">'+categoryFilmsElementx[categoryFilmsElementx.length-1].innerHTML+'</option>');
+                categoryFilmsElementx[categoryFilmsElementx.length-1].remove();
+                })
+            selectedOption.remove();
+          });
+        //List Actor  
+        var listActorSelect=[];
+        var ActorElement =document.getElementById("Actor");
+        var ActorListElement =document.getElementById('ActorList');
+        var actorSelectFilmsElement = document.querySelectorAll('#Actor option');
+        
+        var actorFilmsElement = document.querySelectorAll('.Actor__select');
+        actorFilmsElement.forEach((actorFilmElement, index) =>{
+            actorFilmElement.addEventListener("click",()=>{
+                ActorElement.insertAdjacentHTML("beforeend", ' <option value="7">'+actorFilmElement.innerHTML+'</option>');
+                actorFilmElement.remove();
+                })
+          });
+   
+          ActorElement.addEventListener("change", function() {
+
+            // Lấy tham chiếu đến phần tử option được chọn
+            var selectedOption = this.options[this.selectedIndex];
+          
+            // Xóa phần tử option được chọn khỏi DOM
+            
+            ActorListElement.insertAdjacentHTML("beforeend", ' <div class="Actor__select" value="'+selectedOption.value+'">'+selectedOption.innerHTML+'</div>');
+            var actorFilmsElementx = document.querySelectorAll('.Actor__select');
+            actorFilmsElementx[actorFilmsElementx.length-1].addEventListener("click",()=>{
+                ActorElement.insertAdjacentHTML("beforeend", ' <option value="'+actorFilmsElementx[actorFilmsElementx.length-1].getAttribute("value")+'">'+actorFilmsElementx[actorFilmsElementx.length-1].innerHTML+'</option>');
+                actorFilmsElementx[actorFilmsElementx.length-1].remove();
+                })
+            selectedOption.remove();
+          });
+        //cuộn màn hình
+        window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+            header.classList.add('scroll');
+        } else {
+            header.classList.remove('scroll');
+        }
+        });
+        
+        //thanh srearch
+        var search=document.querySelector(".header__userInfor__search input");
+        search.addEventListener("focus",function(){
+            document.querySelector(".header__userInfor__search i:first-of-type ").classList.add("focus");
+        });
+        search.addEventListener("blur",function(){
+            document.querySelector(".header__userInfor__search i:first-of-type ").classList.remove("focus");
+        });
+        function searchApear(){
+            document.querySelector(".header__userInfor__search input").focus();
+    }
+    
+
+
+    </script>
+</body>
+
+</html>
