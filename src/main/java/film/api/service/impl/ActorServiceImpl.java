@@ -1,6 +1,7 @@
-package film.api.service;
+package film.api.service.impl;
 
-import film.api.DTO.ActorDTO;
+import film.api.DTO.response.ActorDTO;
+import film.api.exception.NotFoundException;
 import film.api.models.Actor;
 import film.api.repository.ActorRepository;
 import film.api.service.ActorService;
@@ -34,8 +35,8 @@ public class ActorServiceImpl implements ActorService {
     @Override
     public Actor updateActor(Long id, ActorDTO actorPatchDTO) {
 
-        Actor actor = actorRepository.findById(id).orElse(null);
-
+        Actor actor = actorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Actor not found"));
         if(actorPatchDTO.getSex() != null) {
             actor.setSex(actorPatchDTO.getSex());
         }
@@ -55,6 +56,8 @@ public class ActorServiceImpl implements ActorService {
 
     @Override
     public void deleteById(Long id) {
+        Actor actor = actorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Actor not found"));
         actorRepository.deleteById(id);
     }
 

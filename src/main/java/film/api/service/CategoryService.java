@@ -1,6 +1,6 @@
 package film.api.service;
 
-import film.api.DTO.CategoryDTO;
+import film.api.DTO.response.CategoryDTO;
 import film.api.models.Category;
 
 import java.util.List;

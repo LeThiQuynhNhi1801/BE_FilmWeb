@@ -1,14 +1,13 @@
 package film.api.configuration.security.controller;
 
-import film.api.DTO.UserDTO;
-import film.api.DTO.UserSignupDTO;
+import film.api.DTO.response.UserDTO;
+import film.api.DTO.response.UserSignupDTO;
 import film.api.configuration.security.*;
 import film.api.models.User;
-import film.api.service.ChapterService;
 import film.api.service.HistoryService;
 import film.api.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
+@CrossOrigin("*")
 public class UserController {
 
     @Value("${jwt.header}")

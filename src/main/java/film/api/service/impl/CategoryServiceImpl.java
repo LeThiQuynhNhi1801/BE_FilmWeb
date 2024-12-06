@@ -1,6 +1,7 @@
 package film.api.service.impl;
 
-import film.api.DTO.CategoryDTO;
+import film.api.DTO.response.CategoryDTO;
+import film.api.exception.NotFoundException;
 import film.api.models.Category;
 import film.api.repository.CategoryRepository;
 import film.api.service.CategoryService;
@@ -49,14 +50,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Long id, Category category){
-        Category old = categoryRepository.findById(id).get();
+        Category old = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
         old.setCategoryName(category.getCategoryName());
         return categoryRepository.save(old);
     }
 
     @Override
     public  void deleteCategory(Long id){
-        categoryRepository.delete(categoryRepository.findById(id).get());
+        Category old = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+        categoryRepository.delete(old);
     }
 
     @Override

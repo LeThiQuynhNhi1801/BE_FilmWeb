@@ -1,6 +1,6 @@
 package film.api.service;
 
-import film.api.DTO.ActorDTO;
+import film.api.DTO.response.ActorDTO;
 import film.api.models.Actor;
 
 import java.util.List;

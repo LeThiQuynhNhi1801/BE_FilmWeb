@@ -21,6 +21,8 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    private String idChapter;
+
     @NotNull
     private String ChapterName;
 
@@ -32,7 +34,7 @@ public class Chapter {
 
     @NotNull
     @JsonIgnore
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "film_id")
     private Film Film;
 
@@ -53,4 +55,14 @@ public class Chapter {
 
     @NotNull
     private String ChapterStatus;
+
+//    @NotNull
+//    @ManyToOne
+//    @JoinColumn(name = "actor_id")
+//    private Actor actor;
+//
+//    @NotNull
+//    @ManyToOne
+//    @JoinColumn(name = "director_id")
+//    private Director director;
 }

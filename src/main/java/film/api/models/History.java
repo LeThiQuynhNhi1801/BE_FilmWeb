@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -36,4 +37,10 @@ public class History {
 
     @NotNull
     private LocalDateTime HistoryView;
+
+    private String weather;
+
+    private String device;
+
+    private Timestamp time;
 }

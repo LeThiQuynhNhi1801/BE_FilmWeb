@@ -12,11 +12,10 @@ import org.springframework.web.context.request.WebRequest;
 public class ApiExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse handlerNotFoundException(NotFoundException ex, WebRequest req) {
-        // Log err
-
-        return new ExceptionResponse( ex.getMessage(),404);
+    public ExceptionResponse handleNotFoundException(NotFoundException ex, WebRequest req) {
+        return new ExceptionResponse(ex.getMessage(), 404);
     }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
@@ -24,7 +23,6 @@ public class ApiExceptionHandler {
         return new ExceptionResponse( "Đối tượng không tồn tại",400);
     }
 
-    // Xử lý tất cả các exception chưa được khai báo
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionResponse handlerException(Exception ex, WebRequest req) {

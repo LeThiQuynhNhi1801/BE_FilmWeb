@@ -1,6 +1,7 @@
 package film.api.controller;
 
-import film.api.DTO.*;
+import film.api.DTO.request.FilmRequestDTO;
+import film.api.DTO.response.*;
 import film.api.models.Category;
 import film.api.models.Chapter;
 import film.api.models.Film;
@@ -8,6 +9,7 @@ import film.api.service.ActorService;
 import film.api.service.CategoryService;
 import film.api.service.ChapterService;
 import film.api.service.FilmService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/ApiV1")
-
+@Slf4j
+@CrossOrigin("*")
 public class FilmController {
     @Autowired
     private FilmService filmService;
@@ -49,7 +52,7 @@ public class FilmController {
     }
     @Secured({"ROLE_ADMIN"})
     @PostMapping("/AllFilm")
-    public ResponseEntity<?> postFilm(@ModelAttribute  FilmRequestDTO filmPost){
+    public ResponseEntity<?> postFilm(@ModelAttribute FilmRequestDTO filmPost){
         Film film =filmService.saveFilm(filmPost);
         return new ResponseEntity<>(film, HttpStatus.CREATED);
     }

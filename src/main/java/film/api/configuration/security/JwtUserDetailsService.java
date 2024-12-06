@@ -1,8 +1,7 @@
 package film.api.configuration.security;
-import film.api.DTO.UserSignupDTO;
+import film.api.DTO.response.UserSignupDTO;
 import film.api.models.*;
 import film.api.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -18,12 +18,12 @@ public class BootifulApplication {
 	private static final Logger logger = LoggerFactory.getLogger(BootifulApplication.class);
 
 	public static void main(String[] args) {
-		try {
-			setup();
+//		try {
+//			setup();
 			SpringApplication.run(BootifulApplication.class, args);
-		} catch (Exception e) {
-			logger.error("An error occurred while starting the application", e);
-		}
+//		} catch (Exception e) {
+//			logger.error("An error occurred while starting the application", e);
+//		}
 	}
 
 	public static void setup() throws IOException {

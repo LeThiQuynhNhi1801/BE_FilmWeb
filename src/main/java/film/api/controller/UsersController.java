@@ -1,8 +1,9 @@
 package film.api.controller;
 
-import film.api.DTO.UserByAdminDTO;
+import film.api.DTO.response.UserByAdminDTO;
 import film.api.models.User;
 import film.api.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ApiV1")
-
+@Slf4j
+@CrossOrigin("*")
 public class UsersController {
     @Autowired
     private UserService userService;

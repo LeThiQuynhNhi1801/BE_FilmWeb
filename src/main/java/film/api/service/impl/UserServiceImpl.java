@@ -1,7 +1,8 @@
 package film.api.service.impl;
 
-import film.api.DTO.UserByAdminDTO;
+import film.api.DTO.response.UserByAdminDTO;
 import film.api.configuration.security.UserChangePassword;
+import film.api.exception.NotFoundException;
 import film.api.models.Role;
 import film.api.models.User;
 import film.api.models.UserRole;
@@ -27,7 +28,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
     @Override
@@ -47,7 +49,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        Role role =roleRepository.findById(2L).orElse(null);
+        Role role =roleRepository.findById(2L)
+                .orElseThrow(() -> new NotFoundException("Role not found"));
 
         User userex=userRepository.findByUsername(user.getUsername());
         if(userex!=null)throw new IllegalArgumentException("User đã tồn tại");
@@ -85,7 +88,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(Long id, UserByAdminDTO userPatchDTO) {
         Object s=userRepository.findById(id);
-        User user = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
         if(userPatchDTO.getFullname() != null) {
             user.setFullname(userPatchDTO.getFullname());

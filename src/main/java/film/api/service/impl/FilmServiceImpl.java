@@ -1,11 +1,14 @@
 package film.api.service.impl;
 
-import film.api.DTO.FilmRequestDTO;
+import film.api.DTO.request.FilmRequestDTO;
 import film.api.exception.InvalidInputException;
+import film.api.exception.NotFoundException;
 import film.api.helper.FileSystemHelper;
 import film.api.models.*;
 import film.api.repository.*;
 import film.api.service.FilmService;
+import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class FilmServiceImpl implements FilmService {
     @Autowired
     private FilmRepository filmRepository;
@@ -54,124 +58,153 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public String saveFile(MultipartFile file, String typeFile){
 
-
-        // Lưu file vào thư mục image
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileNameNew =getUniqueFileName(fileName, FileSystemHelper.STATIC_FILES_DIR);
+        String fileNameNew = getUniqueFileName(fileName, FileSystemHelper.STATIC_FILES_DIR);
 
+        // Đường dẫn để lưu file
         Path path = Paths.get(FileSystemHelper.STATIC_FILES_DIR, fileNameNew);
-        System.out.println("saved file path: "+ path.toString());
+        System.out.println("Saved file path: " + path.toString());
+
         try {
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error saving file", e);
         }
 
-        // Lưu đường dẫn của file vào CSDL
+        // Kiểm tra phần mở rộng của file
+        String extension = FilenameUtils.getExtension(fileNameNew).toLowerCase();
+        String urlBasePath;
+
+        if ("mp4".equals(extension)) {
+            urlBasePath = "/play/";
+        } else {
+            urlBasePath = "/api/files/";
+        }
+
+        // Tạo đường dẫn URL trả về
         String fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/get-file/")
+                .path(urlBasePath)
                 .path(fileNameNew)
                 .toUriString();
-        return  fileUrl;
+
+        return fileUrl;
+        // Lưu file vào thư mục image
+//        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+//        String fileNameNew =getUniqueFileName(fileName, FileSystemHelper.STATIC_FILES_DIR);
+//
+//        Path path = Paths.get(FileSystemHelper.STATIC_FILES_DIR, fileNameNew);
+//        System.out.println("saved file path: "+ path.toString());
+//        try {
+//            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        // Lưu đường dẫn của file vào CSDL
+//        String fileUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/play/")
+//                .path(fileNameNew)
+//                .toUriString();
+//        return  fileUrl;
     }
 
     @Override
     public Film findById(Long id) {
-        return filmRepository.findById(id).orElse(null);
+        return filmRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Film not found"));
     }
 
     @Override
+    @Transactional
     public Film saveFilm(FilmRequestDTO filmPost)  {
+        try {
+            if (filmPost.getFilmName() == null || filmPost.getFilmName().replaceAll("\\s+", "").equals("")) {
+                throw new InvalidInputException("Vui Lòng nhập Tên Film");
+            }
+            if (filmPost.getDescription() == null || filmPost.getDescription().equals("")) {
+                throw new InvalidInputException("Vui Lòng nhập Mô Tả Film");
+            }
 
+            if (filmPost.getListActor() == null) {
+                throw new InvalidInputException("Vui Lòng nhập Tên Diễn Viên");
+            } else {
+                if (filmPost.getListActor().equals("")) throw new InvalidInputException("Vui Lòng nhập Tên Diễn Viên");
+            }
+            if (filmPost.getListCategory() == null) {
+                throw new InvalidInputException("Vui Lòng nhập Thể Loại Film");
+            } else {
+                if (filmPost.getListCategory().equals(""))
+                    throw new InvalidInputException("Vui Lòng nhập Thể Loại Film");
+            }
+            if (filmPost.getImage() == null) {
+                throw new InvalidInputException("Vui Lòng nhập Image Film");
+            }
+            if (filmPost.getBannerFilmName() == null) {
+                throw new InvalidInputException("Vui Lòng nhập Banner Film");
+            }
+            if (filmPost.getTrailerFilm() == null) {
+                throw new InvalidInputException("Vui Lòng nhập Trailer Film");
+            }
+            if (filmPost.getFilmBollen() == 1) {
+                if (filmPost.getChapterName() == null) throw new InvalidInputException("Vui Lòng nhập tên Chapter 1");
+                if (filmPost.getChapterDescription() == null)
+                    throw new InvalidInputException("Vui Lòng nhập mô tả Chapter 1");
+            }
+            String image = saveFile(filmPost.getImage(), "Images");
+            String banner = saveFile(filmPost.getBannerFilmName(), "Images");
+            String trailer = saveFile(filmPost.getTrailerFilm(), "Videos");
+            String status = "Đang Ra";
+            String video = "";
+            if (filmPost.getVideo() != null) {
+                video = saveFile(filmPost.getVideo(), "Videos");
+                status = "Đã Ra";
+            }
 
-        if(filmPost.getFilmName()==null||filmPost.getFilmName().replaceAll("\\s+", "").equals(""))
-        {
-            throw new InvalidInputException("Vui Lòng nhập Tên Film");
-        }
-        if(filmPost.getDescription()==null||filmPost.getDescription().equals(""))
-        {
-            throw new InvalidInputException("Vui Lòng nhập Mô Tả Film");
-        }
+            Film film = filmRepository.save(new Film(null, filmPost.getFilmName(), filmPost.getDescription(), banner, filmPost.getFilmBollen(), trailer, image));
+            String[] categoryString = filmPost.getListCategory().split(",");
+            Long[] categoryList = new Long[categoryString.length];
+            for (int i = 0; i < categoryString.length; i++) {
+                categoryList[i] = Long.parseLong(categoryString[i]);
+            }
+            String[] actorString = filmPost.getListCategory().split(",");
+            Long[] actorList = new Long[actorString.length];
+            for (int i = 0; i < actorString.length; i++) {
+                actorList[i] = Long.parseLong(actorString[i]);
+            }
+            for (Long i : categoryList) {
+                Category category = categoryRepository.findById(i).orElseThrow(null);
+                categoryFilmRepository.save(new CategoryFilm(null, category, film));
+            }
+            Chapter chapterNew = new Chapter(null,"", "", 1, video, film, "", trailer, image, LocalDateTime.now(), null, status);
+            if (filmPost.getFilmBollen() == 0) {
+                chapterNew.setChapterName(filmPost.getFilmName());
+                chapterNew.setChapterDescription(filmPost.getDescription());
 
-        if(filmPost.getListActor()==null)
-        {
-            throw new InvalidInputException("Vui Lòng nhập Tên Diễn Viên");
-        }else{
-            if(filmPost.getListActor().equals(""))throw new InvalidInputException("Vui Lòng nhập Tên Diễn Viên");
-        }
-        if(filmPost.getListCategory()==null)
-        {
-            throw new InvalidInputException("Vui Lòng nhập Thể Loại Film");
-        }else{
-            if(filmPost.getListCategory().equals("")) throw new InvalidInputException("Vui Lòng nhập Thể Loại Film");
-        }
-        if(filmPost.getImage()==null)
-        {
-            throw new InvalidInputException("Vui Lòng nhập Image Film");
-        }
-        if(filmPost.getBannerFilmName()==null)
-        {
-            throw new InvalidInputException("Vui Lòng nhập Banner Film");
-        }
-        if(filmPost.getTrailerFilm()==null)
-        {
-            throw new InvalidInputException("Vui Lòng nhập Trailer Film");
-        }
-        if(filmPost.getFilmBollen()==1)
-        {
-            if(filmPost.getChapterName()==null) throw new InvalidInputException("Vui Lòng nhập tên Chapter 1");
-            if(filmPost.getChapterDescription()==null) throw new InvalidInputException("Vui Lòng nhập mô tả Chapter 1");
-        }
-        String image = saveFile(filmPost.getImage(),"Images");
-        String banner = saveFile(filmPost.getBannerFilmName(),"Images");
-        String trailer =saveFile(filmPost.getTrailerFilm(),"Videos");
-        String status="Đang Ra";
-        String video="";
-        if(filmPost.getVideo()!=null){
-            video =saveFile(filmPost.getVideo(),"Videos");
-            status="Đã Ra";
-        }
+            } else {
+                chapterNew.setChapterName(filmPost.getChapterName());
+                chapterNew.setChapterDescription(filmPost.getChapterDescription());
+            }
+            if (filmPost.getVideo() != null) {
+                chapterNew.setChapterPremieredDay(LocalDateTime.now());
+            }
+            Chapter chapterNewSave = chapterRepository.save(chapterNew);
+            for (Long i : actorList) {
+                Actor actor = actorRepository.findById(i).orElseThrow(null);
+                actorChapterRepository.save(new ActorChapter(null, actor, chapterNewSave));
+            }
 
-        Film film = filmRepository.save(new Film(null, filmPost.getFilmName(), filmPost.getDescription(), banner, filmPost.getFilmBollen(), trailer,image ));
-        String[] categoryString = filmPost.getListCategory().split(",");
-        Long[] categoryList = new Long[categoryString.length];
-        for(int i = 0; i < categoryString.length; i++) {
-            categoryList[i] = Long.parseLong(categoryString[i]);
+            return film;
         }
-        String[] actorString = filmPost.getListCategory().split(",");
-        Long[] actorList = new Long[actorString.length];
-        for(int i = 0; i < actorString.length; i++) {
-            actorList[i] = Long.parseLong(actorString[i]);
+        catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Error occurred while saving film", e);
         }
-        for(Long i:categoryList){
-            Category category=categoryRepository.findById(i).orElseThrow(null);
-            categoryFilmRepository.save(new CategoryFilm(null,category,film));
-        }
-        Chapter chapterNew=new Chapter(null,"",1,video,film,"",trailer,image, LocalDateTime.now(),null,status);
-        if(filmPost.getFilmBollen()==0)
-        {
-            chapterNew.setChapterName(filmPost.getFilmName());
-            chapterNew.setChapterDescription(filmPost.getDescription());
-
-        }else{
-            chapterNew.setChapterName(filmPost.getChapterName());
-            chapterNew.setChapterDescription(filmPost.getChapterDescription());
-        }
-        if(filmPost.getVideo()!=null){
-            chapterNew.setChapterPremieredDay(LocalDateTime.now());
-        }
-        Chapter chapterNewSave=chapterRepository.save(chapterNew);
-        for(Long i:actorList){
-            Actor actor=actorRepository.findById(i).orElseThrow(null);
-            actorChapterRepository.save(new ActorChapter(null,actor,chapterNewSave));
-        }
-
-        return film;
     }
 
     @Override
     public Film updateFilm(Long filmID, FilmRequestDTO filmPatch){
-        Film film = filmRepository.findById(filmID).orElse(null);
+        Film film = filmRepository.findById(filmID)
+                .orElseThrow(() -> new NotFoundException("Film not found"));
         Chapter chapter = chapterRepository.getChapterByFilmID(film.getId()).get(0);
 
         if(filmPatch.getFilmName()!=null||filmPatch.getFilmName().replaceAll("\\s+", "").equals("")==false)
@@ -207,7 +240,8 @@ public class FilmServiceImpl implements FilmService {
 
 
             for(Long i :actorList){
-                Actor actor =actorRepository.findById(i).orElse(null);
+                Actor actor =actorRepository.findById(i)
+                        .orElseThrow(() -> new NotFoundException("Actor not found"));
                 if(actor!=null){
                     ActorChapter  actorChapter = new ActorChapter(null,actor,chapter);
                     actorChapterRepository.save(actorChapter);
@@ -221,7 +255,8 @@ public class FilmServiceImpl implements FilmService {
             }
 
             for(Long i :categoryList){
-                Category category =categoryRepository.findById(i).orElse(null);
+                Category category =categoryRepository.findById(i)
+                        .orElseThrow(() -> new NotFoundException("Category not found"));;
                 if(category!=null){
                     CategoryFilm  categoryFilm = new CategoryFilm(null,category,film);
                     categoryFilmRepository.save(categoryFilm);
